@@ -1,0 +1,80 @@
+{% extends 'dashboard/master.html' %}
+{% block content %}
+    <div class="container">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert mt-3 hideAlert {% if message.tags == 'success' %} alert-success {% elif message.tags == 'error' %} alert-danger {% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+        <div class="row mt-5">
+            <div class="col-md-4 ">
+                <div class="text-center">
+                    <img class="rounded-circle" width="200" height="200"
+                         src="{% if user.image %} {{ user.image.url }} {% else %} https://www.flaticon.com/svg/static/icons/svg/848/848043.svg {% endif %}"/>
+                </div>
+                <p class="ml-4 text-center">Welcome {{ user.name }}</p>
+            </div>
+            <div class="col-md-8 ">
+                <div class="card card-body">
+                    <h2 class="text-center">Profile</h2>
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>{{ form.phone.label }}</label>
+                                    {{ form.phone }}
+                                    <span class="text-danger">{{ form.phone.errors |striptags }}</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>{{ form.image.label }}</label>
+                                    {{ form.image }}
+                                    <span class="text-danger">{{ form.image.errors |striptags }}</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>{{ form.facebook_url.label }}</label>
+                                    {{ form.facebook_url }}
+                                    <span class="text-danger">{{ form.facebook_url |striptags }}</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>{{ form.instagram_url.label }}</label>
+                                    {{ form.instagram_url }}
+                                    <span class="text-danger">{{ form.instagram_url.errors |striptags }}</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>{{ form.twitter_url.label }}</label>
+                                    {{ form.twitter_url }}
+                                    <span class="text-danger">{{ form.twitter_url.errors |striptags }}</span>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>{{ form.about.label }}</label>
+                                    {{ form.about }}
+                                    <span class="text-danger">{{ form.about.errors |striptags }}</span>
+                                </div>
+                            </div>
+
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">Submit</button>
+                        <a href="{% url 'dashboard' %}" class="btn btn-success btn-block">Back</a>
+                    </form>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+

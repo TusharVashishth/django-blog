@@ -1,0 +1,71 @@
+{% extends 'layouts/master.html' %}
+{% load static %}
+{% block section %}
+    {% include 'layouts/includes/blog_single_sec.html' with blog=blog %}
+{% endblock %}
+{% block content %}
+    <section class="ftco-section ftco-degree-bg">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 ftco-animate mx-auto">
+                    <p class="mb-5">
+                        <img src="{{ blog.image.url }}" alt="" class="img-fluid">
+                    </p>
+                    <h2 class="mb-3">{{ blog.heading }}</h2>
+                    <p>{{ blog.body |safe }}</p>
+                    <div class="about-author d-flex p-4 bg-light">
+                        <div class="bio mr-5">
+                            <img src="{% if blog.user.image %} {{  blog.user.image.url }} {% else %}https://www.flaticon.com/svg/static/icons/svg/2922/2922510.svg  {% endif %} " width="50" height="50" alt="Image placeholder" class="rounded-circle mb-4">
+                        </div>
+                        <div class="desc">
+                            <h3>{{ blog.user.name }}</h3>
+                            <p>{{ blog.user.about }}</p>
+                        </div>
+                    </div>
+
+
+                    <div class="pt-5 mt-5">
+                        <h3 class="mb-5">{{ comments|length }} {% if comments|length > 1 %} Comments {% else %} Comment {% endif %}</h3>
+                        <ul class="comment-list">
+                            {% for comment in comments %}
+                            <li class="comment">
+                                <div class="vcard bio">
+                                    <img src="{% if comment.user.image %} {{ comment.user.image.url }} {% else %} https://www.flaticon.com/svg/static/icons/svg/848/848043.svg {% endif %}" alt="Image placeholder">
+                                </div>
+                                <div class="comment-body">
+                                    <h3>{{ comment.user.name }}</h3>
+                                    <div class="meta mb-3">{{ comment.created_at|date:"D d M, Y" }} {{ comment.created_at|time:'h:i a' }}</div>
+                                    <p>{{ comment.message }}</p>
+
+                                </div>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        <!-- END comment-list -->
+
+                        <div class="comment-form-wrap pt-5">
+                            <h3 class="mb-5">Leave a comment</h3>
+                            <form action="" method="post" class="p-5 bg-light">
+                                {% csrf_token %}
+                                <input type="hidden" value="{{ user.id }}" name="user">
+                                <input type="hidden" value="{{ blog.id }}" name="blog">
+                                <div class="form-group">
+                                    <label for="message">{{ form.message.label }}</label>
+                                    {{ form.message }}
+                                    <span class="text-danger">{{ form.message.errors |striptags }}</span>
+                                </div>
+                                <div class="form-group">
+                                    <input type="submit" value="Post Comment" class="btn py-3 px-4 btn-primary">
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+
+                </div> <!-- .col-md-8 -->
+
+
+            </div>
+        </div>
+    </section>
+{% endblock %}

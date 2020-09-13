@@ -1,0 +1,65 @@
+{% extends 'dashboard/master.html' %}
+{% load static %}
+{% block content %}
+    <div class="container-fluid">
+        <div class="card card-body">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert fade show hideAlert{% if message.tags == 'error' %}  alert-danger  {% elif message.tags == 'success' %} alert-success {% endif %}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+            <div class="d-flex justify-content-end m-3">
+                <a href="{% url 'add-blog' %}" class="btn btn-primary">Add Blog</a>
+            </div>
+            <table id="table_id" class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                    <th>Heading</th>
+                    <th>Sub Heading</th>
+                    <th>Image</th>
+                    <th>Is private</th>
+                    <th>Time to read</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for blog in blogs %}
+                    <tr>
+                        <td>{{ blog.heading }}</td>
+                        <td>{{ blog.sub_heading }}</td>
+                        <td><img class="rounded-circle" src="{{ blog.image.url }}" alt="img" width="50" height="50">
+                        </td>
+                        <td>{% if blog.is_private == 0 %} No {% else %} Yes  {% endif %}</td>
+                        <td>{{ blog.time_to_read }} min</td>
+                        <td>
+                            <a href="{% url 'update-blog' blog.id %}" class="btn btn-info btn-sm ">Edit</a>
+                            <button data-id="{{ blog.id }}" class="btn btn-danger btn-sm deleteBlog">Delete</button>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+        </div>
+
+    </div>
+{% endblock %}
+
+{% block extraJs %}
+    <script src="{% static 'custom/js/app.js' %}"></script>
+    <script>
+        $(document).ready(function () {
+            $('#table_id').DataTable();
+            $(document).on('click', '.deleteBlog', function () {
+                var id = $(this).attr('data-id')
+                {#let domain = window.location.protocol +"://"+ window.location.host#}
+                let url = `/delete-blog/${id}`
+                    // Calling function from app.js file
+                deleteBlog(url)
+            })
+        });
+    </script>
+
+{% endblock %}
